@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${default}",
+                "/opt/homebrew/Cellar/root/6.36.02/include/root"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang++",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm64"
+        }
+    ],
+    "version": 4
+    //"configurations": [
+    //    {
+    //        "name": "Mac",
+    //        "includePath": [
+    //            "${default}"
+    //        ],
+    //        "defines": [],
+    //        "compilerPath": "/usr/bin/clang",
+    //        "cStandard": "c17",
+    //        "cppStandard": "c++17"
+    //    }
+    //],
+    //"version": 4
+}

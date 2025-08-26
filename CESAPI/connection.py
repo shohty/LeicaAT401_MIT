@@ -153,7 +153,7 @@ class Connection(object):
         logger.debug("Destructing!")
         self.disconnect()
 
-    def connect(self, host='192.168.0.1', port=700):
+    def connect(self, host='192.168.0.2', port=700):
         if self.__sock != None:
             raise Exception("Repeat connection. Only one connection to the laser tracker is allowed at one time.")
 
