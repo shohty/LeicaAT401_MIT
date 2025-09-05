@@ -450,7 +450,7 @@ class ReturnDataT(object):
 
 class BasicCommandCT(object):
   def __init__(self):
-    self.packet = b''
+    self.packet = b'' 
     self.__packet_size = 12
     self.__sizes = [4]
     self.__formats = [('<I ')]
