@@ -407,10 +407,10 @@ ES_API enum ES_SystemStatusChange
     ES_SCC_InitializationStatusChanged = 151,      // Note the typing error: this should read ES_SSC instead of ES_SCC...
     ES_SCC_TiltSensorStatusChanged = 152,          // ...nevertheless, for compatibility reasons, leave this unchanged. 
     
-    // New events added for release V2.3           // Note that items of this enum are ordered by theîr values, not by their release- time)
+    // New events added for release V2.3           // Note that items of this enum are ordered by theï¿½r values, not by their release- time)
     ES_SSC_EmsysFilesImported = 820,     
 
-    // New events added for release V3.5           // Note that items of this enum are ordered by theîr values, not by their release- time)
+    // New events added for release V3.5           // Note that items of this enum are ordered by theï¿½r values, not by their release- time)
     ES_SSC_SensorDetected = 850,     
     ES_SSC_SensorDisconnected = 851,     
 

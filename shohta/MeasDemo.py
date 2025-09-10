@@ -1,4 +1,6 @@
 import sys
+import os
+import ROOT
 import logging
 import time
 import threading
@@ -98,11 +100,11 @@ def sync_command():
 def set_units():
     units = SystemUnitsDataT()
     # 各単位を設定
-    units.lenUnitType = ES_LU_Millimeter      # 長さ単位: ミリメートル
-    units.angUnitType = ES_AU_Degree          # 角度単位: 度
-    units.tempUnitType = ES_TU_Fahrenheit        # 温度単位: 摂氏
-    units.pressUnitType = ES_PU_InHg       # 圧力単位: インチ水銀柱
-    units.humUnitType = ES_HU_RH              # 湿度単位: 相対湿度
+    units.lenUnitType = ES_LU_Millimeter     
+    units.angUnitType = ES_AU_Radian         
+    units.tempUnitType = ES_TU_Fahrenheit  #set same as AT Controler otherwise it'll be out of range  
+    units.pressUnitType = ES_PU_InHg       #set same as AT Controler otherwise it'll be out of range  
+    units.humUnitType = ES_HU_RH              
     command.SetUnits(units)
     print(f'Units set successfully')
 def get_units():
@@ -162,9 +164,12 @@ def set_envparams():
         current_env_response = command.GetEnvironmentParams()
         current_env = current_env_response.environmentData
         print(f"Current - Temperature: {current_env.dTemperature:.2f} °F")
-        print(f"Current - Pressure: {current_env.dPressure:.2f} ")
+        print(f"Current - Pressure: {current_env.dPressure:.2f} inHg ")
         print(f"Current - Humidity: {current_env.dHumidity:.2f} %")
-        
+        command.SetEnvironmentParams(current_env)
+        print("✓ Environment params set successfully")
+        return True
+        '''
         # 3. 新しい環境データオブジェクトを作成（範囲内の値に修正）
         new_env = EnvironmentDataT()
         new_env.dTemperature = current_env.dTemperature  # 温度はそのまま
@@ -186,6 +191,7 @@ def set_envparams():
         command.SetEnvironmentParams(new_env)
         print("✓ Environment params set successfully")
         return True
+        '''
         
     except Exception as e:
         print(f"Failed to set environment params: {e}")
@@ -199,6 +205,7 @@ def disable_weather_monitor():
         # システム設定を取得
         settings_response = command.GetSystemSettings()
         settings = settings_response.systemSettings
+        print(f"")
         
         # 気象モニターを無効化
         settings.weatherMonitorStatus = ES_WMS_NotConnected
@@ -400,7 +407,8 @@ def set_TransformationParam():
         return False
 def set_CoordinateSystemType():
     try:
-        coordinate_system = ES_CS_RHR
+        #coordinate_system = ES_CS_RHR
+        coordinate_system = ES_CS_SCC#EMMA deploys this system
         command.SetCoordinateSystemType(coordinate_system)
         print("✓ Set Coordinate System Type successful")
         response = command.GetCoordinateSystemType()
@@ -561,7 +569,7 @@ def get_adm_info():
         print(f"Failed to get ADM info: {e}")
         return None
 
-def test_measurement():
+def measure():
     """測定を実行"""
     try:
         print("=== Starting Measurement ===")
@@ -576,7 +584,6 @@ def test_measurement():
         print("✓ Start Measurement successful")
         
         if measurement:
-            print("✓ Measurement successful")
             result = {
                 'measMode': measurement.measMode,
                 'x': measurement.dVal1,
@@ -587,14 +594,89 @@ def test_measurement():
                 'std3': measurement.dStd3,
                 'stdTotal': measurement.dStdTotal,
             }
+            os.system('afplay /System/Library/Sounds/Blow.aiff')
+            print(f"Measurement Done !!")
             return result
         else:
             print("✗ Measurement failed")
+            os.system('afplay /System/Library/Sounds/Submarine.aiff')
             return None
     except Exception as e:
         print(f"Failed to start measurement: {e}")
         return False
+def initialize_roottree():
+    """ initialize ROOT tree """
+    tree = ROOT.TTree("LTtree","Leica Laser Tracker measurement")
 
+    #Define branches
+    measMode = ROOT.std.vector('int')()
+    x = ROOT.std.vector('double')()
+    y = ROOT.std.vector('double')()
+    z = ROOT.std.vector('double')()
+    std1 = ROOT.std.vector('double')()
+    std2 = ROOT.std.vector('double')()
+    std3 = ROOT.std.vector('double')()
+    stdTotal = ROOT.std.vector('double')()
+    tree.Branch("measMode", measMode)
+    tree.Branch("x", x)
+    tree.Branch("y", y)
+    tree.Branch("z", z)
+    tree.Branch("std1", std1)
+    tree.Branch("std2", std2)
+    tree.Branch("std3", std3)
+    tree.Branch("stdTotal", stdTotal)
 
+    return tree,(measMode, x, y, z, std1, std2, std3, stdTotal)
 
+def fill_tree(tree, branch_vars, result):
+    """ fill ROOT tree """
+    measMode, x, y, z, std1, std2, std3, stdTotal = branch_vars
+    measMode.push_back(result['measMode'])
+    x.push_back(result['x'])
+    y.push_back(result['y'])
+    z.push_back(result['z'])
+    std1.push_back(result['std1'])
+    std2.push_back(result['std2'])
+    std3.push_back(result['std3'])
+    stdTotal.push_back(result['stdTotal'])
+    tree.Fill()
 
+def fixedpoint_measure(pointsname, repeat_num):
+    """repeat measurement at a fixed point"""
+    print(f"=== Starting {repeat_num} Measurements ===")
+    rootFileName = f"{pointsname}_{repeat_num}.root"
+    tree, branch_vars = initialize_roottree()
+
+    successful_measurements = 0
+    failed_measurements = 0
+    for i in range(repeat_num):
+        print(f"=== Measurement {i+1} / {repeat_num} ===")
+        try:
+            result = measure()
+            if result:
+                fill_tree(tree, branch_vars, result)
+                successful_measurements += 1
+                print(f"✓ Measurement {i+1} successful")
+            else:
+                failed_measurements += 1
+                print(f"✗ Measurement {i+1}/{repeat_num} failed")
+        except Exception as e:
+            failed_measurements += 1
+            print(f"✗ Measurement {i+1}/{repeat_num} error: {e}")
+
+        # 測定間隔（必要に応じて）
+        time.sleep(0.1)
+    print(f"=== {repeat_num} Measurements Done ===")
+    print(f"✓ {successful_measurements} measurements successful")
+    print(f"✗ {failed_measurements} measurements failed")
+    print(f"=== Saving to {rootFileName} ===")
+    rootFile = ROOT.TFile(rootFileName, "RECREATE")
+    tree.Write()
+    rootFile.Close()
+    print(f"✓ Successfully saved {tree.GetEntries()} measurements to {rootFileName}")
+    return True
+
+def soundtest():
+    os.system('afplay /System/Library/Sounds/Blow.aiff')
+    print("✓ Sound test successful")
+    return True
