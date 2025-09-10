@@ -631,6 +631,16 @@ def initialize_roottree():
 def fill_tree(tree, branch_vars, result):
     """ fill ROOT tree """
     measMode, x, y, z, std1, std2, std3, stdTotal = branch_vars
+    #clear every time
+    measMode.clear()
+    x.clear()
+    y.clear()
+    z.clear()
+    std1.clear()
+    std2.clear()
+    std3.clear()
+    stdTotal.clear()
+    #fill new data
     measMode.push_back(result['measMode'])
     x.push_back(result['x'])
     y.push_back(result['y'])
@@ -639,6 +649,7 @@ def fill_tree(tree, branch_vars, result):
     std2.push_back(result['std2'])
     std3.push_back(result['std3'])
     stdTotal.push_back(result['stdTotal'])
+    
     tree.Fill()
 
 def fixedpoint_measure(pointsname, repeat_num):
