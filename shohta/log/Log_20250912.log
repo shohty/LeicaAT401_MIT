@@ -1,0 +1,283 @@
+16:00:34 measurement:Debug::initializing -> running
+16:00:34 log:Debug::initializing -> running
+16:00:34 runui:Debug::initializing -> running
+16:00:34 qc:Debug::initializing -> running
+16:00:34 messagestore:Debug::C:\FMS\data\Argonne\FMS_MESSAGE_STORE_Argonne.xml created.
+16:00:34 messagestore:Debug::initializing -> running
+16:00:34 store:Debug::C:\FMS\data\Argonne\FMS_STORE_Argonne.xml created.
+16:00:34 store:Debug::initializing -> running
+16:00:38 script:Debug::running -> initializing
+16:00:38 store:Debug::running -> initializing
+16:00:38 script:Debug::initializing -> running
+16:00:38 store:Debug::C:\FMS\data\Argonne\FMS_STORE_Argonne.xml created.
+16:00:38 store:Debug::initializing -> running
+16:00:40 lasertracker:Debug::initializing -> running
+16:00:40 position:Debug::waiting -> unknown
+16:00:42 script:Debug::Started FMS_SystemTestMarch2025.py with FMS_HallProbe_TestMarch2025.dat
+16:00:42 python:Info::R_20250912_160042:0.0.0: run start -FMS_SystemTestMarch2025.py (FMS_HallProbe_TestMarch2025.dat)
+16:00:42 python:Info::0.0.0: Initializing processing components
+16:00:42 measurement:Debug::running -> initializing
+16:00:42 measurement:Debug::initializing -> running
+16:00:42 nmr:Debug::running -> initializing
+16:00:42 nmr:Debug::initializing -> running
+16:00:44 mapper:Error::local:init.cmd::Error 1 - TCP Close Connection in mapperCmdsFGV.vi->Mapper_Component.vi
+16:00:44 mapper:Debug::initializing -> running
+16:00:44 mapper:Debug::running -> initializing
+16:00:44 python:Error::0.0.0: Init error: ('error', 'Script error')
+16:00:44 python:Error:: EmmaException: Script error
+16:00:44 python:Info::0.0.0: Stopping measurement
+16:00:44 python:Info::R_20250912_160042:0.0.0: run end
+16:00:44 store:Debug::running -> paused
+16:00:44 messagestore:Debug::running -> paused
+16:00:44 positionclient:Debug::running -> aborting
+16:00:45 script:Debug::Ended FMS_SystemTestMarch2025.py
+16:00:45 script:Debug::stderr 
+->16:00:42 Connecting from WL-146737 to (localhost, 10001)
+->16:00:42 START
+->16:00:44 Emma exception error in awaitEvent
+->16:00:44 EmmaException
+->16:00:44 Exception:: Script error (error)
+->  File "C:\emma_2.0\branches\Configuration\Scripts\Dev\emma.py", line 271, in main
+->    script(cmdOptions)
+->    ~~~~~~^^^^^^^^^^^^
+->  File "C:\emma_2.0\branches\Configuration\Scripts\Dev\FMS_SystemTestMarch2025.py", line 487, in script
+->    raise e
+->16:00:44 END
+->16:00:45 Disconnecting from ('127.0.0.1', 10001)
+
+16:00:54 mapper:Warning:::TCP Read timeout after 10000 milli seconds. Retrying...::Warning 56 - TCP Open Connection in mapperCmdsFGV.vi->Mapper_Component.vi
+16:00:54 mapper:Warning:::TCP Read timeout after 10000 milli seconds. Retrying...::Warning 1 - TCP Read in mapperCmdsFGV.vi->Mapper_Component.vi
+16:00:54 mapper:Error:::::Error 1 - TCP Close Connection in mapperCmdsFGV.vi->Mapper_Component.vi
+16:01:04 mapper:Error::local:init.cmd::Error 1 - TCP Close Connection in mapperCmdsFGV.vi->Mapper_Component.vi
+16:01:04 mapper:Debug::initializing -> running
+16:02:11 starter:Debug::running -> initializing
+16:02:14 lasertrackerui:Debug::running -> initializing
+16:02:14 lasertrackerui:Debug::initializing -> running
+16:02:15 positionclient:Debug::unknown -> initializing
+16:02:15 positionclient:Debug::initializing -> running
+16:02:15 mapperui:Debug::initializing -> running
+16:02:15 log:Debug::initializing -> running
+16:02:15 measurement:Debug::initializing -> running
+16:02:15 runui:Debug::initializing -> running
+16:02:15 qc:Debug::initializing -> running
+16:02:15 mapper:Debug::initializing -> running
+16:02:15 messagestore:Debug::C:\FMS\data\Argonne\FMS_MESSAGE_STORE_Argonne.xml created.
+16:02:15 messagestore:Debug::initializing -> running
+16:02:15 store:Debug::C:\FMS\data\Argonne\FMS_STORE_Argonne.xml created.
+16:02:15 store:Debug::initializing -> running
+16:02:18 script:Debug::running -> initializing
+16:02:18 store:Debug::running -> initializing
+16:02:18 script:Debug::initializing -> running
+16:02:18 store:Debug::C:\FMS\data\Argonne\FMS_STORE_Argonne.xml created.
+16:02:18 store:Debug::initializing -> running
+16:02:19 lasertracker:Debug::initializing -> running
+16:02:19 position:Debug::waiting -> unknown
+16:02:20 script:Debug::Started FMS_SystemTestMarch2025.py with FMS_HallProbe_TestMarch2025.dat
+16:02:20 python:Info::R_20250912_160220:0.0.0: run start -FMS_SystemTestMarch2025.py (FMS_HallProbe_TestMarch2025.dat)
+16:02:20 python:Info::0.0.0: Initializing processing components
+16:02:20 measurement:Debug::running -> initializing
+16:02:20 measurement:Debug::initializing -> running
+16:02:20 nmr:Debug::running -> initializing
+16:02:20 nmr:Debug::initializing -> running
+16:02:20 mapper:Debug::running -> initializing
+16:02:20 mapper:Debug::initializing -> running
+16:02:20 mapperui:Debug::running -> initializing
+16:02:20 mapperui:Debug::initializing -> running
+16:02:20 qc:Debug::running -> initializing
+16:02:20 qc:Debug::initializing -> running
+16:02:20 dataaggregator:Debug::unknown -> initializing
+16:02:20 dataaggregator:Debug::initializing -> running
+16:02:20 runui:Debug::running -> initializing
+16:02:20 runui:Debug::initializing -> running
+16:02:20 store:Debug::running -> initializing
+16:02:20 store:Debug::C:\FMS\data\Argonne\FMS_STORE_Argonne.xml created.
+16:02:20 store:Debug::initializing -> running
+16:02:20 messagestore:Debug::running -> initializing
+16:02:20 messagestore:Debug::C:\FMS\data\Argonne\FMS_MESSAGE_STORE_Argonne.xml created.
+16:02:20 messagestore:Debug::initializing -> running
+16:02:20 archiver:Debug::unknown -> initializing
+16:02:20 archiver:Debug::initializing -> running
+16:02:20 lasertracker:Debug::running -> initializing
+16:02:20 position:Debug::unknown -> waiting
+16:02:23 lasertracker:Debug::initializing -> running
+16:02:23 position:Debug::waiting -> unknown
+16:02:23 lasertrackerui:Debug::running -> initializing
+16:02:23 lasertrackerui:Debug::initializing -> running
+16:02:23 position:Debug::unknown -> initializing
+16:02:26 position:Debug::initializing -> postinit
+16:02:26 position:Debug::postinit -> running
+16:02:26 python:Info::0.0.0: Init completed OK
+16:02:26 python:Info::1.0.0: measurement start: Field
+16:02:26 archiver:Debug::running -> archiving
+16:02:26 archiver:Debug::System Exec.vi. Command was "svn info C:\emma_2.0\branches\Configuration\Scripts\Dev\FMS_HallProbe_TestMarch2025.dat  --show-item revision "
+16:02:26 archiver:Debug::System Exec.vi. Command was "svn info C:\emma_2.0\branches\Configuration\Scripts\Dev\FMS_SystemTestMarch2025.py  --show-item revision "
+16:02:26 archiver:Debug::System Exec.vi. Command was "svn info C:\emma_2.0\branches\Configuration\Config\Dev\FMS_SystemTestMarch2025.ini  --show-item revision "
+16:02:26 python:Info::1.0.0: PositionZ is a set of start,stop,incr
+16:02:26 python:Info::1.0.0: Angle is a set of start,stop,incr
+16:02:26 python:Info::1.0.0: numSeq21
+16:02:26 python:Info::1.0.0: I = 150 (A)
+16:02:26 python:Info::1.0.0: moving to HOME, waiting for ack
+16:03:22 position:Debug::mapper homed.
+16:03:22 position:Debug::mapper homed.
+16:03:22 python:Info::1.0.0: moving to START POSITION, waiting for ack
+16:03:34 mapper:Warning:::TCP Read timeout after 10000 milli seconds. Retrying...::Warning 56 - TCP Read in mapperCmdsFGV.vi->Mapper_Component.vi
+16:03:44 mapper:Warning:::TCP Read timeout after 10000 milli seconds. Retrying...::Warning 56 - TCP Read in mapperCmdsFGV.vi->Mapper_Component.vi
+16:03:51 position:Debug::running -> shooting.ref
+16:03:51 position:Info::Finding ref reflector "101B"
+16:03:53 lasertracker:Info::Searching for reflector 101B at (17660.957338,-2.778651,1.676223)
+16:03:59 position:Info::Measuring ref reflector "101B"
+16:04:08 lasertracker:Info::Measured reflector 101B at (17679.969229,-2.778633,1.675446)
+16:04:10 position:Info::Finding ref reflector "REFMark U"
+16:04:12 lasertracker:Info::Searching for reflector REFMark U at (5329.134358,2.618342,1.616840)
+16:04:19 position:Info::Measuring ref reflector "REFMark U"
+16:04:27 lasertracker:Info::Measured reflector REFMark U at (5329.363459,2.618401,1.617033)
+16:04:27 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 35.27681064605713
+16:04:27 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 35.289523124694824
+16:04:28 position:Info::Finding ref reflector "SC"
+16:04:28 python:Debug::awaiting control.system.measure.ack from position ignored property.system.set.ack from lasertracker after 36.803735971450806
+16:04:28 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 36.99981236457825
+16:04:32 lasertracker:Info::Searching for reflector SC at (4068.612744,-1.479672,2.046195)
+16:04:37 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 45.641764402389526
+16:04:38 position:Info::Measuring ref reflector "SC"
+16:04:38 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.ack from lasertracker after 47.10488843917847
+16:04:39 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 47.6113817691803
+16:04:46 lasertracker:Info::Measured reflector SC at (4081.563490,-1.479577,2.042783)
+16:04:46 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 54.2823212146759
+16:04:46 position:Debug::shooting.ref -> running
+16:04:46 position:Debug::running -> shooting.ds
+16:04:47 position:Info::Finding ds reflector "Slave Down"
+16:04:51 lasertracker:Info::Searching for reflector Slave Down at (2981.687103,-3.034705,1.900946)
+16:04:58 position:Info::Measuring ds reflector "Slave Down"
+16:05:00 position:Info::Finding ds reflector "Slave Down"
+16:05:01 lasertracker:Info::Searching for reflector Slave Down at (2981.687103,-3.034705,1.900946)
+16:05:06 position:Info::Measuring ds reflector "Slave Down"
+16:05:13 lasertracker:Info::Measured reflector Slave Down at (2982.167445,-3.034624,1.900923)
+16:05:14 position:Info::Finding ds reflector "Master Down"
+16:05:17 lasertracker:Info::Searching for reflector Master Down at (3389.829651,-2.699080,1.859430)
+16:05:22 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 36.935961961746216
+16:05:24 position:Info::Measuring ds reflector "Master Down"
+16:05:24 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.ack from lasertracker after 38.20186138153076
+16:05:24 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 38.50923180580139
+16:05:32 lasertracker:Info::Measured reflector Master Down at (3406.288203,-2.699142,1.855058)
+16:05:32 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 46.80194449424744
+16:05:32 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 46.81345534324646
+16:05:34 position:Info::Finding ds reflector "Master UP"
+16:05:34 python:Debug::awaiting control.system.measure.ack from position ignored property.system.set.ack from lasertracker after 48.43169283866882
+16:05:34 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 48.82557201385498
+16:05:38 lasertracker:Info::Searching for reflector Master UP at (9928.180822,-2.840297,1.667795)
+16:05:43 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 57.05839776992798
+16:05:44 position:Info::Measuring ds reflector "Master UP"
+16:05:44 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.ack from lasertracker after 58.527650117874146
+16:05:45 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 59.142351150512695
+16:05:51 lasertracker:Info::Measured reflector Master UP at (9928.405519,-2.840236,1.667843)
+16:05:51 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 65.50930738449097
+16:05:51 position:Debug::shooting.ds -> running
+16:05:51 position:Debug::running -> shooting.prop
+16:05:52 position:Info::Finding prop reflector "A"
+16:05:54 lasertracker:Info::Searching for reflector A at (4402.957791,-2.868694,1.435062)
+16:06:00 position:Info::Measuring prop reflector "A"
+16:06:08 lasertracker:Info::Measured reflector A at (4395.975987,-2.869557,1.434603)
+16:06:10 position:Info::Finding prop reflector "B"
+16:06:12 lasertracker:Info::Searching for reflector B at (4368.549604,-2.993956,1.569393)
+16:06:18 position:Info::Measuring prop reflector "B"
+16:06:27 lasertracker:Info::Measured reflector B at (4361.497598,-2.994244,1.569878)
+16:06:27 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 35.67849826812744
+16:06:27 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 35.77995324134827
+16:06:28 position:Info::Finding prop reflector "C"
+16:06:28 python:Debug::awaiting control.system.measure.ack from position ignored property.system.set.ack from lasertracker after 37.393860816955566
+16:06:28 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 37.396971464157104
+16:06:28 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 37.40717911720276
+16:06:29 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 37.59053015708923
+16:06:32 lasertracker:Info::Searching for reflector C at (4452.050989,-2.963082,1.763776)
+16:06:37 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 45.8263840675354
+16:06:49 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 57.499173164367676
+16:07:05 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.nack from lasertracker after 74.27780795097351
+16:07:05 position:Warning::Failed to Measure Reflector C
+16:07:05 position:Info::Finding prop reflector "D"
+16:07:05 python:Debug::awaiting control.system.measure.ack from position ignored property.system.set.ack from lasertracker after 74.29944014549255
+16:07:07 lasertracker:Info::Searching for reflector D at (4368.398562,-2.840858,1.616329)
+16:07:13 position:Info::Measuring prop reflector "D"
+16:07:13 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.ack from lasertracker after 81.8658595085144
+16:07:20 lasertracker:Info::Measured reflector D at (4361.293243,-2.840614,1.616002)
+16:07:20 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 88.94547724723816
+16:07:20 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 88.95669865608215
+16:07:21 position:Info::Finding prop reflector "SP1"
+16:07:21 python:Debug::awaiting control.system.measure.ack from position ignored property.system.set.ack from lasertracker after 90.25961780548096
+16:07:22 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 90.56309390068054
+16:07:24 lasertracker:Info::Searching for reflector SP1 at (5665.873637,-2.903094,1.580767)
+16:07:29 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 97.84065699577332
+16:07:30 position:Info::Measuring prop reflector "SP1"
+16:07:30 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.ack from lasertracker after 99.14450430870056
+16:07:31 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 99.65484142303467
+16:07:38 lasertracker:Info::Measured reflector SP1 at (5658.765116,-2.903107,1.580763)
+16:07:38 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 106.83109259605408
+16:07:38 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 106.92877960205078
+16:07:39 position:Info::Finding prop reflector "SP2"
+16:07:39 python:Debug::awaiting control.system.measure.ack from position ignored property.system.set.ack from lasertracker after 108.3521523475647
+16:07:40 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 108.65019154548645
+16:07:41 lasertracker:Info::Searching for reflector SP2 at (5665.818010,-2.926510,1.576902)
+16:07:46 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 114.81193208694458
+16:07:47 position:Info::Measuring prop reflector "SP2"
+16:07:47 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.ack from lasertracker after 115.9219126701355
+16:07:47 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 116.33408403396606
+16:07:47 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 116.33669662475586
+16:07:48 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 116.52969455718994
+16:07:54 lasertracker:Info::Measured reflector SP2 at (5658.730562,-2.926582,1.577035)
+16:07:54 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 123.20797538757324
+16:07:54 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 123.21567273139954
+16:07:56 position:Info::Finding prop reflector "SP3"
+16:07:56 python:Debug::awaiting control.system.measure.ack from position ignored property.system.set.ack from lasertracker after 124.52730178833008
+16:07:56 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 124.7257776260376
+16:07:59 lasertracker:Info::Searching for reflector SP3 at (5666.358442,-2.930351,1.600297)
+16:08:04 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 132.7590572834015
+16:08:05 position:Info::Measuring prop reflector "SP3"
+16:08:05 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.ack from lasertracker after 133.92360401153564
+16:08:06 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 134.63553190231323
+16:08:13 lasertracker:Info::Measured reflector SP3 at (5659.285333,-2.930292,1.600475)
+16:08:13 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.ack from lasertracker after 141.8047215938568
+16:08:13 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 141.90895414352417
+16:08:14 position:Info::Finding prop reflector "SP4"
+16:08:14 python:Debug::awaiting control.system.measure.ack from position ignored property.system.set.ack from lasertracker after 143.33210921287537
+16:08:15 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 143.52460885047913
+16:08:16 lasertracker:Info::Searching for reflector SP4 at (5668.145216,-2.898623,1.603624)
+16:08:22 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 151.2024428844452
+16:08:24 position:Info::Measuring prop reflector "SP4"
+16:08:24 python:Debug::awaiting control.system.measure.ack from position ignored control.system.find.ack from lasertracker after 152.71086263656616
+16:08:24 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 152.91734886169434
+16:08:24 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 153.018550157547
+16:08:24 python:Debug::awaiting control.system.measure.ack from position ignored property.system.property.dat from lasertracker after 153.02203130722046
+16:08:25 python:Debug::awaiting control.system.measure.ack from position ignored control.system.measure.nack from lasertracker after 154.33766651153564
+16:08:26 position:Warning::Failed to Measure Reflector SP4
+16:08:26 position:Debug::shooting.prop -> running
+16:08:26 python:Info::1.1.0: sequence start-Z: 0
+16:08:28 position:Debug::running -> shooting.ds
+16:08:28 position:Info::Finding ds reflector "Slave Down"
+16:08:33 lasertracker:Info::Searching for reflector Slave Down at (2981.687103,-3.034705,1.900946)
+16:08:40 position:Info::Measuring ds reflector "Slave Down"
+16:08:40 python:Error::Script aborted by user
+16:08:40 python:Error:: EmmaException: Script aborted
+16:08:40 python:Info::1.1.0: Stopping measurement
+16:08:40 python:Info::R_20250912_160220:1.1.0: run end
+16:08:40 store:Debug::running -> paused
+16:08:40 archiver:Debug::archiving -> paused
+16:08:40 messagestore:Debug::running -> paused
+16:08:40 position:Debug::shooting.ds -> running
+16:08:40 positionclient:Debug::running -> aborting
+16:08:40 positionclient:Debug::aborting -> running
+16:08:41 script:Debug::Ended FMS_SystemTestMarch2025.py
+16:08:41 script:Debug::stderr 
+->16:02:20 Connecting from WL-146737 to (localhost, 10001)
+->16:02:20 START
+->16:08:40 Emma exception abort in awaitEvent
+->16:08:40 EmmaException
+->16:08:40 Exception:: Script aborted (abort)
+->  File "C:\emma_2.0\branches\Configuration\Scripts\Dev\emma.py", line 271, in main
+->    script(cmdOptions)
+->    ~~~~~~^^^^^^^^^^^^
+->  File "C:\emma_2.0\branches\Configuration\Scripts\Dev\FMS_SystemTestMarch2025.py", line 487, in script
+->    raise e
+->16:08:40 END
+->16:08:41 Disconnecting from ('127.0.0.1', 10001)
+
+16:08:48 lasertracker:Info::Measured reflector Slave Down at (2982.165720,-3.034624,1.900924)
+16:10:31 shell:Info::Exiting

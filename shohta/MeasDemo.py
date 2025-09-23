@@ -3,7 +3,9 @@ import os
 import ROOT
 import logging
 import time
+import datetime
 import threading
+import csv
 sys.path.insert(0, '/Users/shohtatakami/github/LeicaAT401_MIT')
 from CESAPI.connection import Connection
 from CESAPI.command import *
@@ -17,15 +19,66 @@ logger = logging.getLogger('CESAPI')
 logger.setLevel(logging.DEBUG)
 
 logging.getLogger('CESAPI.command').setLevel(logging.DEBUG)
-##connection->sync_commandで一回check_connection
-##うまくいかない場合はdisconnect_from_trackerで少し待ってからもう一度同じ流れ
-##それでもダメな場合はトラッカー再起動
+##Excute functions below at the top directory of this API
+##Before connection,  check that any other PCs are not connected to the tracker(192.168.0.2:700)
+##connection->sync_command (after sync_command, do check_connection, for just in case)
+##If it doesn't work, try disconnect_from_tracker and then do the same process again
+##If it still doesn't work, reboot the tracker and reconnect the LAN cable to your PC 
+def first_setup():
+    set_measurement_mode()
+    set_weathermonitor()
+    set_OrientationpParam()
+    set_TransformationParam()
+    setADM()
+    set_CoordinateSystemType(7)
+    set_system_setting()
+def setADM():
+    try:
+        print("=== Setting ADM ===")
+        stationary_params = StationaryModeDataT()
+        stationary_params.lMeasTime = 2000  # Measuring Time (ms)
+        stationary_params.bUseADM = 0      # don't use ADM because EMMA doesen't use it (no effect; still set to 1)
+        # setting Parameters
+        command.SetStationaryModeParams(stationary_params)
+        newADM = command.GetStationaryModeParams().stationaryModeData.bUseADM
+        if newADM == 0:
+            print("✓ ADM set successfully")
+        else:
+            print("✗ ADM set failed")
+            return False
+        #print(f"✓ ADM set successfully {newADM}")
+        return True
+    except Exception as e:
+        print(f"Failed to set ADM: {e}")
+        return False
 
+
+def set_weathermonitor():
+    try:
+        response = command.GetSystemSettings()
+        settings = response.systemSettings
+        WeatherMonitorStatus = settings.weatherMonitorStatus
+        if WeatherMonitorStatus == ES_WMS_NotConnected or WeatherMonitorStatus == ES_WMS_ReadOnly:
+            print("✓ Weather monitor is not Okay")
+            settings.weatherMonitorStatus = ES_WMS_ReadAndCalculateRefractions
+            command.SetSystemSettings(settings)
+            new_weathermonitorstatus = command.GetSystemSettings().systemSettings.weatherMonitorStatus
+            print(f"✓ Weather monitor set to ReadAndCalculateRefractions {new_weathermonitorstatus}")
+            return True
+        elif WeatherMonitorStatus == ES_WMS_ReadAndCalculateRefractions:
+            print("✓ Weather monitor is already set to ReadAndCalculateRefractions")
+            return True
+        else:
+            print("✗ Weather monitor is not Okay")
+            return False
+    except Exception as e:
+        print(f"Failed to set weather monitor: {e}")
+        return False
 def check_connection():
     try:
         print("=== Checking Connection ===")
         print("1. Checking connection...")
-        response = command.GetTrackerInfo()#簡単なコマンドを送って接続を確認
+        response = command.GetTrackerInfo()#check connection with a simple command
         print(f"new status object: {response}")
         trackername = response.cTrackerName
         print(f"Tracker Name: {trackername.decode('utf-16').rstrip('\x00')}")
@@ -35,7 +88,6 @@ def check_connection():
         print(f"Failed to check connection: {e}")
         return False
 def disconnect_from_tracker():
-    """レーザートラッカーとの接続を切断"""
     try:
         print("=== Disconnecting from Laser Tracker ===")
         
@@ -70,15 +122,7 @@ def revive_connection():
     except Exception as e:
         print(f"Failed to revive connection: {e}")
         return False
-def initialize():
-    try:
-        print("=== Initializing ===")
-        command.Initialize()
-        print(f"✓ Initialization successful")
-        return True
-    except Exception as e:
-        print(f"Failed to initialize: {e}")
-        return False
+
 def connection():
     global conn 
     conn = Connection()
@@ -109,15 +153,14 @@ def set_units():
     print(f'Units set successfully')
 def get_units():
     units = command.GetUnits()
-    print(f'Length Unit Type: {units.unitsSettings.lenUnitType}')                   # 単位を設定
+    print(f'Length Unit Type: {units.unitsSettings.lenUnitType}')     
     print(f'Angle Unit Type: {units.unitsSettings.angUnitType}')
     print(f'Temperature Unit Type: {units.unitsSettings.tempUnitType}')
     print(f'Pressure Unit Type: {units.unitsSettings.pressUnitType}')
     print(f'Humidity Unit Type: {units.unitsSettings.humUnitType}')
 def get_environment_info():
-    """環境パラメータを取得して出力"""
     try:
-        # 環境パラメータを取得
+        #get the environment parameters
         env_params = command.GetEnvironmentParams()
         
         print("\n=== Current Environment Parameters ===")
@@ -130,7 +173,6 @@ def get_environment_info():
         print(f"Error getting environment params: {e}")
         return None
 def check_system_settings():
-    """システム設定を確認"""
     try:
         print("=== Checking System Settings ===")
         settings_response = command.GetSystemSettings()
@@ -150,17 +192,16 @@ def check_system_settings():
         return None
 
 def set_envparams():
-    """環境パラメータを設定（競合を避ける方法）"""
     try:
         print("=== Setting Environment Parameters ===")
         
-        # 1. システム設定を確認
+        # 1. check the system settings
         settings = check_system_settings()
         if settings and settings.weatherMonitorStatus != ES_WMS_NotConnected:
             print("⚠️ Weather monitor is connected. Manual environment setting may conflict.")
             print("Consider setting weather monitor to 'Not Connected' first.")
         
-        # 2. 現在の環境データを取得
+        # 2. get the current environment parameters
         current_env_response = command.GetEnvironmentParams()
         current_env = current_env_response.environmentData
         print(f"Current - Temperature: {current_env.dTemperature:.2f} °F")
@@ -198,7 +239,6 @@ def set_envparams():
         return False
 
 def disable_weather_monitor():
-    """気象モニターを無効化して環境パラメータを手動設定可能にする"""
     try:
         print("=== Disabling Weather Monitor ===")
         
@@ -219,16 +259,15 @@ def disable_weather_monitor():
         print(f"Failed to disable weather monitor: {e}")
         return False
 def initialization():
-    """段階的な初期化"""
     try:
         print("=== Gradual Initialization ===")
         
-        # 1. システム状態を確認
+        # 1. check the system status
         print("1. Checking system status...")
         status = command.GetSystemStatus()
         print(f"   Current status: {status.trackerProcessorStatus}")
         
-        # 2. 初期化の確認
+        # 2. check the initialization status
         if status.trackerProcessorStatus == ES_TPS_Initialized:
             print("✓ Initialization is Okay, Tracker is Ready.")
             return True
@@ -237,7 +276,7 @@ def initialization():
             print("2. Attempting initialization...")
             command.Initialize()
             print("   Initialization command sent")
-            return False
+            return True
         
     except Exception as e:
         print(f"✗ Gradual initialization failed: {e}")
@@ -247,19 +286,19 @@ def set_measurement_mode():
     try:
         print("=== Set Measurement Mode (AT4xx) ===")
         
-        # AT4xxでは静止測定モードのみ
+        # AT4xx supports only Stationary mode
         print("1. AT4xx supports only Stationary mode")
         print(f"   Mode: {ES_MM_Stationary} (Stationary)")
         
-        # 測定モードを設定
+        # set the measurement mode
         print("2. Setting measurement mode...")
         command.SetMeasurementMode(ES_MM_Stationary)
         print("   Measurement mode command sent")
         
-        # 設定完了を待つ
+        # wait for the setting to be completed
         time.sleep(1)
         
-        # 設定後の確認
+        # check the measurement mode after setting
         print("3. Verifying measurement mode...")
         response = command.GetMeasurementMode()
         print(f"new mode object: {response}")
@@ -405,11 +444,11 @@ def set_TransformationParam():
     except Exception as e:
         print(f"Failed to set params: {e}")
         return False
-def set_CoordinateSystemType():
+def set_CoordinateSystemType(coordsystype):
     try:
         #coordinate_system = ES_CS_RHR
-        coordinate_system = ES_CS_SCC#EMMA deploys this system
-        command.SetCoordinateSystemType(coordinate_system)
+        #coordinate_system = ES_CS_SCC#EMMA deploys this system
+        command.SetCoordinateSystemType(coordsystype)
         print("✓ Set Coordinate System Type successful")
         response = command.GetCoordinateSystemType()
         print(f"✓ Get Coordinate System Type successful {response.coordSysType}")
@@ -419,19 +458,20 @@ def set_CoordinateSystemType():
 def set_system_setting():
     try:
         system_setting = SystemSettingsDataT()
-        system_setting.weatherMonitorStatus = ES_WMS_ReadOnly
+        system_setting.weatherMonitorStatus = ES_WMS_ReadAndCalculateRefractions
         # パラメータ適用設定
-        system_setting.bApplyStationOrientationParams = 1  # ステーション方向パラメータを適用
-        system_setting.bApplyTransformationParams = 1      # 変換パラメータを適用
+        system_setting.bApplyStationOrientationParams = 1  # Apply Station Orientation Params
+        system_setting.bApplyTransformationParams = 0    # NOT Apply Transformation Params
         
         # 動作設定
-        system_setting.bKeepLastPosition = 1               # 最後の位置を保持
-        system_setting.bSendUnsolicitedMessages = 1       # 未要求メッセージを送信
-        system_setting.bSendReflectorPositionData = 0     # リフレクター位置データは送信しない
+        system_setting.bKeepLastPosition = 1               # keep last position
+        system_setting.bSendUnsolicitedMessages = 1       # send unsolicited messages
+        system_setting.bSendReflectorPositionData = 1     # send reflector position data
         
         # ハードウェア設定
-        system_setting.bHasNivel = 1                       # レベルセンサーあり
-        system_setting.bHasVideoCamera = 1                 # ビデオカメラあり
+        system_setting.bTryMeasurementMode = 1            #set to try measurement mode
+        system_setting.bHasNivel = 1                   # Level sensor is mounted
+        system_setting.bHasVideoCamera = 1                 # The video camera is mounted
         
         command.SetSystemSettings(system_setting)
         print("✓ Set System Setting successful")
@@ -452,7 +492,7 @@ def check_measurement_prerequisites():
     try:
         print("=== Checking Measurement Prerequisites ===")
         
-        # 1. システムステータスを確認
+        # 1. check the system status
         print("1. Checking system status...")
         try:
             status = command.GetSystemStatus()
@@ -460,7 +500,7 @@ def check_measurement_prerequisites():
         except Exception as e:
             print(f"Failed to get system status: {e}")
         
-        # 2. トラッカーステータスを確認
+        # 2. check the tracker status
         print("2. Checking tracker status...")
         try:
             tracker_status = command.GetTrackerStatus()
@@ -468,7 +508,7 @@ def check_measurement_prerequisites():
         except Exception as e:
             print(f"Failed to get tracker status: {e}")
         
-        # 3. リフレクターを探す
+        # 3. search for a reflector
         print("3. Searching for reflector...")
         try:
             find_result = command.FindReflector(10.0)
@@ -478,7 +518,7 @@ def check_measurement_prerequisites():
             print(f"Failed to find reflector: {e}")
             print("⚠️ No reflector found - measurement may fail")
         
-        # 4. 測定モードを確認
+        # 4. check the measurement mode
         print("4. Checking measurement mode...")
         try:
             meas_mode = command.GetMeasurementMode()
@@ -493,7 +533,7 @@ def check_measurement_prerequisites():
         print(f"Failed to check prerequisites: {e}")
         return False
 
-def go_to_position(x, y, z, use_adm=True):
+def go_to_position(x, y, z, use_adm=False):
     """指定した直交座標にレーザーを向ける"""
     try:
         print(f"=== Going to Position ({x}, {y}, {z}) ===")
@@ -507,7 +547,7 @@ def go_to_position(x, y, z, use_adm=True):
         print(f"Failed to go to position: {e}")
         return False
 
-def go_to_position_hvd(distance, horizontal_angle, vertical_angle, use_adm=True):
+def go_to_position_hvd(distance, horizontal_angle, vertical_angle, use_adm=False):
     """指定した極座標にレーザーを向ける"""
     try:
         print(f"=== Going to Position HVD (Distance: {distance}, H: {horizontal_angle}°, V: {vertical_angle}°) ===")
@@ -570,7 +610,7 @@ def get_adm_info():
         return None
 
 def measure():
-    """測定を実行"""
+    """Single Measurement"""
     try:
         print("=== Starting Measurement ===")
         
@@ -586,30 +626,34 @@ def measure():
         if measurement:
             result = {
                 'measMode': measurement.measMode,
-                'x': measurement.dVal1,
-                'y': measurement.dVal2,
-                'z': measurement.dVal3,
+                'val1': measurement.dVal1,
+                'val2': measurement.dVal2,
+                'val3': measurement.dVal3,
                 'std1': measurement.dStd1,
                 'std2': measurement.dStd2,
                 'std3': measurement.dStd3,
                 'stdTotal': measurement.dStdTotal,
             }
-            os.system('afplay /System/Library/Sounds/Blow.aiff')
+            os.system('afplay Sounds/Blow.aiff')
             print(f"Measurement Done !!")
             return result
         else:
             print("✗ Measurement failed")
-            os.system('afplay /System/Library/Sounds/Submarine.aiff')
+            os.system('afplay Sounds/Sosumi.aiff')
             return None
     except Exception as e:
         print(f"Failed to start measurement: {e}")
         return False
+
 def initialize_roottree():
     """ initialize ROOT tree """
     tree = ROOT.TTree("LTtree","Leica Laser Tracker measurement")
 
     #Define branches
     measMode = ROOT.std.vector('int')()
+    #timestamp_str = ROOT.std.vector('string')()  # "2023-12-21 12:34:56"
+    date_str = ROOT.std.vector('string')()       # "2023-12-21"
+    time_str = ROOT.std.vector('string')()       # "12:34:56"
     x = ROOT.std.vector('double')()
     y = ROOT.std.vector('double')()
     z = ROOT.std.vector('double')()
@@ -617,7 +661,11 @@ def initialize_roottree():
     std2 = ROOT.std.vector('double')()
     std3 = ROOT.std.vector('double')()
     stdTotal = ROOT.std.vector('double')()
+
     tree.Branch("measMode", measMode)
+    #tree.Branch("timestamp_str", timestamp_str)
+    tree.Branch("date_str", date_str)
+    tree.Branch("time_str", time_str)
     tree.Branch("x", x)
     tree.Branch("y", y)
     tree.Branch("z", z)
@@ -626,13 +674,17 @@ def initialize_roottree():
     tree.Branch("std3", std3)
     tree.Branch("stdTotal", stdTotal)
 
-    return tree,(measMode, x, y, z, std1, std2, std3, stdTotal)
+
+    return tree,(measMode, date_str, time_str, x,y, z, std1, std2, std3, stdTotal)
 
 def fill_tree(tree, branch_vars, result):
     """ fill ROOT tree """
-    measMode, x, y, z, std1, std2, std3, stdTotal = branch_vars
+    measMode, date_str, time_str,x, y, z, std1, std2, std3, stdTotal = branch_vars
     #clear every time
     measMode.clear()
+    #timestamp_str.clear()
+    date_str.clear()
+    time_str.clear()
     x.clear()
     y.clear()
     z.clear()
@@ -640,8 +692,13 @@ def fill_tree(tree, branch_vars, result):
     std2.clear()
     std3.clear()
     stdTotal.clear()
+
     #fill new data
     measMode.push_back(result['measMode'])
+    now = datetime.datetime.now()
+    #timestamp_str.push_back(now.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]) # fill time  
+    date_str.push_back(now.strftime("%Y-%m-%d"))
+    time_str.push_back(now.strftime("%H:%M:%S.%f")[:-3])
     x.push_back(result['x'])
     y.push_back(result['y'])
     z.push_back(result['z'])
@@ -649,23 +706,49 @@ def fill_tree(tree, branch_vars, result):
     std2.push_back(result['std2'])
     std3.push_back(result['std3'])
     stdTotal.push_back(result['stdTotal'])
-    
     tree.Fill()
 
-def fixedpoint_measure(pointsname, repeat_num):
-    """repeat measurement at a fixed point"""
-    print(f"=== Starting {repeat_num} Measurements ===")
-    rootFileName = f"{pointsname}_{repeat_num}.root"
-    tree, branch_vars = initialize_roottree()
+def point_measure(pointsname, repeat_num):
+    print(f"=== Starting {pointsname} Measurements ===")
+    #repeat_num = 1 #temporarily set to 5 times measure for each point
+    # 日付ベースのファイル名
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    csvFileName = f"shohta/log/measurements_{today}.csv"
+    get_coord = command.GetCoordinateSystemType()
+    coordsystype = get_coord.coordSysType
+
+    # CSVファイルの準備
+    csv_data = []
+    # should update to set axes name actively
+    csv_headers = ['coordsystype', 'point_name', 'measurement_id', 'measMode', 'date', 'time', 'val1', 'val2', 'val3', 'std1', 'std2', 'std3', 'stdTotal']
 
     successful_measurements = 0
     failed_measurements = 0
     for i in range(repeat_num):
         print(f"=== Measurement {i+1} / {repeat_num} ===")
         try:
-            result = measure()
+            result = measure() # single measurement
             if result:
-                fill_tree(tree, branch_vars, result)
+                
+                # CSVデータに追加
+                now = datetime.datetime.now()
+                csv_row = [
+                    coordsystype, # coordinate system type (it's defined by numbers, see Programmer's manual)
+                    pointsname,  # point_name
+                    i+1,  # measurement_id
+                    result['measMode'],
+                    now.strftime("%Y-%m-%d"),
+                    now.strftime("%H:%M:%S.%f")[:-3],
+                    result['val1'],
+                    result['val2'],
+                    result['val3'],
+                    result['std1'],
+                    result['std2'],
+                    result['std3'],
+                    result['stdTotal']
+                ]
+                csv_data.append(csv_row)
+                
                 successful_measurements += 1
                 print(f"✓ Measurement {i+1} successful")
             else:
@@ -675,19 +758,27 @@ def fixedpoint_measure(pointsname, repeat_num):
             failed_measurements += 1
             print(f"✗ Measurement {i+1}/{repeat_num} error: {e}")
 
-        # 測定間隔（必要に応じて）
-        time.sleep(0.1)
+        # mesurement interval time (optional)
+        time.sleep(1.0)
     print(f"=== {repeat_num} Measurements Done ===")
     print(f"✓ {successful_measurements} measurements successful")
     print(f"✗ {failed_measurements} measurements failed")
-    print(f"=== Saving to {rootFileName} ===")
-    rootFile = ROOT.TFile(rootFileName, "RECREATE")
-    tree.Write()
-    rootFile.Close()
-    print(f"✓ Successfully saved {tree.GetEntries()} measurements to {rootFileName}")
+    
+    # record the data to csv file
+    print(f"=== Saving to {csvFileName} ===")
+    file_exists = os.path.exists(csvFileName)
+    with open(csvFileName, 'a', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        # if the csv file doesn't exist, make the file and insert the header first.
+        if not file_exists:
+            writer.writerow(csv_headers)
+        writer.writerows(csv_data)
+    print(f"✓ Successfully saved {len(csv_data)} measurements to {csvFileName}")
     return True
-
+    
 def soundtest():
-    os.system('afplay /System/Library/Sounds/Blow.aiff')
+    os.system('afplay Sounds/Blow.aiff')
+    time.sleep(1.0)
+    os.system('afplay Sounds/Sosumi.aiff')
     print("✓ Sound test successful")
     return True
